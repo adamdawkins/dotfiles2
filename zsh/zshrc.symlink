@@ -40,6 +40,10 @@ done
 
 unset config_files
 
+
+# For some reason this doesn't work in an autoload file
+eval "$(rbenv init -)"
+
 # Better history
 # Credits to https://coderwall.com/p/jpj_6q/zsh-better-history-searching-with-arrow-keys
 autoload -U up-line-or-beginning-search
