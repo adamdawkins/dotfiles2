@@ -18,4 +18,9 @@ alias grh="git reset HEAD"
 alias gs='git status -sb' # upgrade your git if -sb breaks for you. it's fun.
 alias s='gs'
 
+# git flow
+alias feature='git flow feature'
+alias release='git flow release'
+alias hotfix='git flow hotfix'
+
 alias theytookthelotmate='git push -u origin --all --follow-tags'
