@@ -1,10 +1,10 @@
 #!/bin/sh
 
-if [ -z "$1" ]; then
+if [ -z "$@" ]; then
   cat ~/todo.txt;
-elif [ "$1" = "open" ]; then
+elif [ "$@" = "open" ]; then
   vim ~/todo.txt;
 else
-  echo "[ ] $1" >> ~/todo.txt;
+  echo "[ ] $@" >> ~/todo.txt;
   cat ~/todo.txt;
 fi
