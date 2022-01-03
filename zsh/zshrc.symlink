@@ -41,9 +41,6 @@ done
 unset config_files
 
 
-# For some reason this doesn't work in an autoload file
-eval "$(rbenv init -)"
-
 # Better history
 # Credits to https://coderwall.com/p/jpj_6q/zsh-better-history-searching-with-arrow-keys
 autoload -U up-line-or-beginning-search
@@ -53,4 +50,3 @@ zle -N down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
 bindkey "^R" history-incremental-search-backward
-export PATH="/usr/local/opt/libxml2/bin:$PATH"
