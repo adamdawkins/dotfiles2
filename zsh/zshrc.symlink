@@ -40,6 +40,8 @@ done
 
 unset config_files
 
+source "$HOME/.vim/bundle/gruvbox/gruvbox_256palette.sh"
+
 
 # Better history
 # Credits to https://coderwall.com/p/jpj_6q/zsh-better-history-searching-with-arrow-keys
