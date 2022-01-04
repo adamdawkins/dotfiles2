@@ -1,0 +1,1 @@
+alias ru='rvm use'
