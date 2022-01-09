@@ -284,14 +284,18 @@ function MkDir()
   exe '!mkdir -p %:h'
 endfunction
 
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" PROMOTE VARIABLE TO RSPEC LET
+" """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! PromoteToLet()
   :normal! dd
   " :exec '?^\s*it\>'
   :normal! P
   :.s/\(\w\+\) = \(.*\)$/let(:\1) { \2 }/
   :normal ==
-  :command! PromoteToLet :call PromoteToLet()
 endfunction
+:command! PromoteToLet :call PromoteToLet()
 
 
 """ TESTING (from https://github.com/garybernhardt/dotfiles/blob/master/.vimrc)
