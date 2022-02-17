@@ -23,25 +23,19 @@ Plugin 'kien/ctrlp.vim'
 " Vim motions on speed!
 Plugin 'easymotion/vim-easymotion'
 
-" Table Mode
-Plugin 'dhruvasagar/vim-table-mode'
+" " Table Mode
+" Plugin 'dhruvasagar/vim-table-mode'
 
-Plugin 'emugel/vim-sum'
+" Plugin 'emugel/vim-sum'
 
-" A scratch file
-Plugin 'vim-scripts/scratch.vim'
+" " A scratch file
+" Plugin 'vim-scripts/scratch.vim'
 
 " Surround
 Plugin 'tpope/vim-surround'
 
 " useful pairs of mappings
 Plugin 'tpope/vim-unimpaired'
-
-" use CTRL-A/CTRL-X to increment dates, times, and more
-Plugin 'tpope/vim-speeddating'
-
-" dadbod.vim: Modern database interface for Vim
-Plugin 'tpope/vim-dadbod'
 
 " Better matching
 Plugin 'adelarsq/vim-matchit'
@@ -83,12 +77,12 @@ Plugin 'maxmellon/vim-jsx-pretty'
 Plugin 'pangloss/vim-javascript'
 Plugin 'prettier/vim-prettier'
 
-"      Markdown
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
+" "      Markdown
+" Plugin 'godlygeek/tabular'
+" Plugin 'plasticboy/vim-markdown'
 
 " Nunjucks
-Plugin 'niftylettuce/vim-jinja'
+" Plugin 'niftylettuce/vim-jinja'
 
 "      PHP
 " Plugin '2072/PHP-Indenting-for-VIm'
@@ -100,13 +94,13 @@ Plugin 'niftylettuce/vim-jinja'
 "      Ruby
 Plugin 'joker1007/vim-ruby-heredoc-syntax'
 Plugin 'despo/vim-ruby-refactoring'
+Plugin 'vim-ruby/vim-ruby'
 
 "      SQL
 Plugin 'vim-scripts/SQLUtilities'
 
 "       TypeScript
 " Plugin 'leafgarland/typescript-vim'
-
 
 ""     TOOLS
 Plugin 'AndrewRadev/splitjoin.vim' " Switch between single-line and multiline forms of code
@@ -121,7 +115,7 @@ Plugin 'tpope/vim-abolish' " Working with words
 Plugin 'dense-analysis/ale'
 
 " tmux intexgration
-Plugin 'christoomey/vim-tmux-runner'
+" Plugin 'christoomey/vim-tmux-runner'
 
 
 " " Undo History
@@ -238,7 +232,7 @@ let g:ale_linters = {
 \   'css': [],
 \}
 
-let g:ale_fix_on_save = 1
+let g:ale_fix_on_save = 0
 
 let g:prettier#autoformat = 0
 let g:prettier#autoformat_require_pragma = 0
@@ -258,8 +252,6 @@ let g:ruby_indent_assignment_style = 'variable'
 " Gundo Python setup
 let g:gundo_prefer_python3 = 1
 
-
-let g:haddock_browser="/usr/bin/firefox"
 
 " Ruby setup
 let g:rubycomplete_buffer_loading = 1
@@ -439,18 +431,18 @@ augroup vimrcEx
 
   "for ruby, autoindent with two spaces, always expand tabs
   autocmd FileType ruby,haml,eruby,yaml,html,sass,cucumber set ai sw=2 sts=2 et
-  autocmd FileType python set sw=4 sts=4 et
+  " autocmd FileType python set sw=4 sts=4 et
 
   autocmd! BufRead,BufNewFile *.sass setfiletype sass
 
-  autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:&gt;
-  autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
+  " autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:&gt;
+  " autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
 
   " Indent p tags
   " autocmd FileType html,eruby if g:html_indent_tags !~ '\\|p\>' | let g:html_indent_tags .= '\|p\|li\|dt\|dd' | endif
 
-  " Don't syntax highlight markdown because it's often wrong
-  autocmd! FileType mkd setlocal syn=off
+  " " Don't syntax highlight markdown because it's often wrong
+  " autocmd! FileType mkd setlocal syn=off
 
   " Leave the return key alone when in command line windows, since it's used
   " to run commands there.
@@ -458,8 +450,8 @@ augroup vimrcEx
   autocmd! BufReadPost quickfix nnoremap <CR> <CR>
   autocmd! CmdwinLeave * :call MapCR()
 
-  " *.md is markdown
-  autocmd! BufNewFile,BufRead *.md setlocal ft=
+  " " *.md is markdown
+  " autocmd! BufNewFile,BufRead *.md setlocal ft=
 
   " indent slim two spaces, not four
   autocmd! FileType slim set sw=2 sts=2 et
@@ -507,30 +499,28 @@ set scrolloff=3
 
 set showtabline=2
 
-" Python indentation
-au BufNewFile,BufRead *.py
-      \:set tabstop=4
-      \:set softtabstop=4
-      \:set shiftwidth=4
-      \:set textwidth=79
-      \:set expandtab
-      \:set autoindent
-      \:set fileformat=unix
-
-au BufNewFile,BufRead *.html,*.htm,*.shtml,*.stm, *.njk set ft=jinja
+" " Python indentation
+" au BufNewFile,BufRead *.py
+"       \:set tabstop=4
+"       \:set softtabstop=4
+"       \:set shiftwidth=4
+"       \:set textwidth=79
+"       \:set expandtab
+"       \:set autoindent
+"       \:set fileformat=unix
+"
+" au BufNewFile,BufRead *.html,*.htm,*.shtml,*.stm, *.njk set ft=jinja
 
 " close fugitive buffers
 autocmd BufReadPost fugitive://* set bufhidden=delete
 
-" Haskell soft tabs
-autocmd Filetype hs setlocal ts=2 sw=2 expandtab
-autocmd Filetype cabal setlocal ts=2 sw=2 expandtab
+" " Haskell soft tabs
+" autocmd Filetype hs setlocal ts=2 sw=2 expandtab
+" autocmd Filetype cabal setlocal ts=2 sw=2 expandtab
 
-" Turn off folds in Markdown files
-au FileType markdown setlocal nofoldenable
-
-au BufRead,BufNewFile *.pcss set filetype=css
-
+" " Turn off folds in Markdown files
+" au FileType markdown setlocal nofoldenable
+"
 
 :iabbrev constructor constructor(props) {<cr>super(props);<cr><cr>}<UP>
 
