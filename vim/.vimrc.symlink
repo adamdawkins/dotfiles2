@@ -43,11 +43,11 @@ Plugin 'adelarsq/vim-matchit'
 " Comments
 Plugin 'tomtom/tcomment_vim'
 
-"Emmet
+" "Emmet
 Plugin 'mattn/emmet-vim'
 
 
-" GIT
+" " GIT
 Plugin 'tpope/vim-fugitive'
 
 " SYNTAXES
@@ -59,7 +59,7 @@ Plugin 'tpope/vim-fugitive'
 " Plugin 'elixir-editors/vim-elixir'
 
 "      elm
-" Plugin 'ElmCast/elm-vim'
+Plugin 'ElmCast/elm-vim'
 
 "      Erlang
 " Plugin 'vim-erlang/vim-erlang-omnicomplete'
@@ -73,9 +73,9 @@ Plugin 'tpope/vim-fugitive'
 " Plugin 'lukerandall/haskellmode-vim'
 
 "      Javascript
-Plugin 'maxmellon/vim-jsx-pretty'
-Plugin 'pangloss/vim-javascript'
-Plugin 'prettier/vim-prettier'
+" Plugin 'maxmellon/vim-jsx-pretty'
+" Plugin 'pangloss/vim-javascript'
+" Plugin 'prettier/vim-prettier'
 
 " "      Markdown
 " Plugin 'godlygeek/tabular'
@@ -92,12 +92,13 @@ Plugin 'prettier/vim-prettier'
 " Plugin 'vim-scripts/indentpython.vim'
 
 "      Ruby
-Plugin 'joker1007/vim-ruby-heredoc-syntax'
-Plugin 'despo/vim-ruby-refactoring'
+" Plugin 'joker1007/vim-ruby-heredoc-syntax'
+" Plugin 'despo/vim-ruby-refactoring'
 Plugin 'vim-ruby/vim-ruby'
+Plugin 'pocke/rbs.vim'
 
 "      SQL
-Plugin 'vim-scripts/SQLUtilities'
+" Plugin 'vim-scripts/SQLUtilities'
 
 "       TypeScript
 " Plugin 'leafgarland/typescript-vim'
@@ -105,7 +106,7 @@ Plugin 'vim-scripts/SQLUtilities'
 ""     TOOLS
 Plugin 'AndrewRadev/splitjoin.vim' " Switch between single-line and multiline forms of code
 Plugin 'tpope/vim-rails'
-Plugin 'tpope/vim-endwise' " better `end` inserts for ruby etc
+" Plugin 'tpope/vim-endwise'
 " Plugin 'ycm-core/YouCompleteMe' " A code-completion engine for Vim
 Plugin 'tpope/vim-abolish' " Working with words
 " Plugin 'ternjs/tern_for_vim' " JS autocomplete
@@ -158,6 +159,8 @@ map <leader>B :wa\|execute ':silent !npm run build' \| execute ':redraw!' \| :si
 " react class => className
 map <leader>c :%s/class=/className=/g<cr>
 
+map <leader>d :ALEDetail<cr>
+
 nnoremap <leader>e :call SelectaFile(expand('%:h'), "*", ":edit")<cr>
 
 " gundo
@@ -186,8 +189,8 @@ map <leader>p :CtrlP<cr>
 " force selecta instead of CtrlP for a bit
 " nnoremap <leader>p :call SelectaFile(".", "*", ":edit")<cr>
 
-" Reload chrome
-" map <leader>r :w\|:silent !reload-chrome<cr>
+" Run ale autofix
+map <leader>r :w \| :ALEFix<cr>
 
 " spell check
 map <leader>s ]s
@@ -219,18 +222,18 @@ set wildignore=**/node_modules?**,**/tmp/**,**/vendor/bundle/**,**/fixtures/vcr_
 let g:ale_javascript_prettier_use_global = 1
 
 let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'javascript': ['prettier'],
-\   'ruby': ['rubocop']
-\}
+            \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+            \   'javascript': ['prettier'],
+            \   'ruby': ['rubocop']
+            \}
 
 let g:ale_linters = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'javascript': ['prettier'],
-\   'ruby': ['rubocop'],
-\   'scss': [],
-\   'css': [],
-\}
+            \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+            \   'javascript': ['prettier'],
+            \   'ruby': ['rubocop'],
+            \   'scss': [],
+            \   'css': [],
+            \}
 
 let g:ale_fix_on_save = 0
 
@@ -238,6 +241,9 @@ let g:prettier#autoformat = 0
 let g:prettier#autoformat_require_pragma = 0
 
 set omnifunc=syntaxcomplete#Complete
+
+let g:elm_setup_keybindings = 0
+
 
 
 " CTRL-P Setup
@@ -273,7 +279,7 @@ set winwidth=126 " the 120 + some space for the line numbers and linting bar  ¯
 
 " make directory for current file
 function MkDir()
-  exe '!mkdir -p %:h'
+    exe '!mkdir -p %:h'
 endfunction
 
 
@@ -281,11 +287,11 @@ endfunction
 " PROMOTE VARIABLE TO RSPEC LET
 " """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! PromoteToLet()
-  :normal! dd
-  " :exec '?^\s*it\>'
-  :normal! P
-  :.s/\(\w\+\) = \(.*\)$/let(:\1) { \2 }/
-  :normal ==
+    :normal! dd
+    " :exec '?^\s*it\>'
+    :normal! P
+    :.s/\(\w\+\) = \(.*\)$/let(:\1) { \2 }/
+    :normal ==
 endfunction
 :command! PromoteToLet :call PromoteToLet()
 
@@ -321,76 +327,76 @@ endfunction
 "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! MapCR()
-	nnoremap <cr> :call RunTestFile()<cr>
+    nnoremap <cr> :call RunTestFile()<cr>
 endfunction
 call MapCR()
 nnoremap <leader>T :call RunNearestTest()<cr>
 nnoremap <leader>a :call RunTests('')<cr>
 
 function! RunTestFile(...)
-	if a:0
-		let command_suffix = a:1
-	else
-		let command_suffix = ""
-	endif
+    if a:0
+        let command_suffix = a:1
+    else
+        let command_suffix = ""
+    endif
 
-	" Are we in a test file?
-	let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\|test_.*\.py\|_test.py\|Test.hs\)$') != -1
+    " Are we in a test file?
+    let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\|test_.*\.py\|_test.py\|Test.hs\)$') != -1
 
-	" Run the tests for the previously-marked file (or the current file if
-	" it's a test).
-	if in_test_file
-		call SetTestFile(command_suffix)
-	elseif !exists("t:grb_test_file")
-		return
-	end
-	call RunTests(t:grb_test_file)
+    " Run the tests for the previously-marked file (or the current file if
+    " it's a test).
+    if in_test_file
+        call SetTestFile(command_suffix)
+    elseif !exists("t:grb_test_file")
+        return
+    end
+    call RunTests(t:grb_test_file)
 endfunction
 
 function! RunNearestTest()
-	let spec_line_number = line('.')
-	call RunTestFile(":" . spec_line_number)
+    let spec_line_number = line('.')
+    call RunTestFile(":" . spec_line_number)
 endfunction
 
 function! SetTestFile(command_suffix)
-	" Set the spec file that tests will be run for.
-	let t:grb_test_file=@% . a:command_suffix
+    " Set the spec file that tests will be run for.
+    let t:grb_test_file=@% . a:command_suffix
 endfunction
 
 function! RunTests(filename)
-	" Write the file and run tests for the given filename
-	if expand("%") != ""
-		:w
-	end
-	" The file is executable; assume we should run
-	if executable(a:filename)
-		exec ":call Fifo('./')" . a:filename
-		" Project-specific test script
-	elseif filereadable("bin/test")
-		exec ":call Fifo('bin/test " . a:filename . "')"
-		" rails test binstub
-	elseif filereadable("bin/rails test")
-		exec ":call Fifo('bundle exec rails test --format documentation --fail-fast " . a:filename . "')"
-	elseif filereadable("script/cucumber")
-		exec ":call Fifo('bundle exec script/cucumber " . a:filename . "')"
-		" Fall back to the .test-commands pipe if available, assuming someone
-		" is reading the other side and running the commands
-	elseif filewritable(".test-commands")
-		let cmd = 'bundle exec rails test --color --format documentation --require "~/lib/vim_rails test_formatter" --format VimFormatter --fail-fast --out tmp/quickfix'
-		exec ":!echo " . cmd . " " . a:filename . " > .test-commands"
+    " Write the file and run tests for the given filename
+    if expand("%") != ""
+        :w
+    end
+    " The file is executable; assume we should run
+    if executable(a:filename)
+        exec ":call Fifo('./')" . a:filename
+        " Project-specific test script
+    elseif filereadable("bin/test")
+        exec ":call Fifo('bin/test " . a:filename . "')"
+        " rails test binstub
+    elseif filereadable("bin/rails test")
+        exec ":call Fifo('bundle exec rails test --format documentation --fail-fast " . a:filename . "')"
+    elseif filereadable("script/cucumber")
+        exec ":call Fifo('bundle exec script/cucumber " . a:filename . "')"
+        " Fall back to the .test-commands pipe if available, assuming someone
+        " is reading the other side and running the commands
+    elseif filewritable(".test-commands")
+        let cmd = 'bundle exec rails test --color --format documentation --require "~/lib/vim_rails test_formatter" --format VimFormatter --fail-fast --out tmp/quickfix'
+        exec ":!echo " . cmd . " " . a:filename . " > .test-commands"
 
-		" Write an empty string to block until the command completes
-		sleep 100m " milliseconds
-		:!echo > .test-commands
-		redraw!
-		" Fall back to a blocking test run with Bundler
-	elseif filereadable("bin/rails test")
-		exec ":call Fifo('bin/rails test --color --fail-fast " . a:filename . "')"
-	elseif filereadable("Gemfile") && strlen(glob("spec/**/*.rb"))
-		exec ":call Fifo('bundle exec rails test --format documentation --color --fail-fast " . a:filename . "')"
-	elseif filereadable("Gemfile") && strlen(glob("test/**/*.rb"))
-		exec ":call Fifo('ruby " . a:filename . "')"
-	end
+        " Write an empty string to block until the command completes
+        sleep 100m " milliseconds
+        :!echo > .test-commands
+        redraw!
+        " Fall back to a blocking test run with Bundler
+    elseif filereadable("bin/rails test")
+        exec ":call Fifo('bin/rails test --color --fail-fast " . a:filename . "')"
+    elseif filereadable("Gemfile") && strlen(glob("spec/**/*.rb"))
+        exec ":call Fifo('bundle exec rails test --format documentation --color --fail-fast " . a:filename . "')"
+    elseif filereadable("Gemfile") && strlen(glob("test/**/*.rb"))
+        exec ":call Fifo('ruby " . a:filename . "')"
+    end
 endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -399,87 +405,88 @@ endfunction
 " Run a given vim command on the results of fuzzy selecting from a given
 " shell command. See usage below.
 function! SelectaCommand(choice_command, selecta_args, vim_command)
-  try
-    let selection = system(a:choice_command . " | selecta " .  a:selecta_args)
-    " Escape spaces in the file name. That ensures that it's a
-    " single argument
-    " when concatenated with vim_command and run with exec.
-    let selection = substitute(selection, ' ', '\\ ', "g")
-  catch /Vim:Interrupt/
-    " Swallow the ^C so that the redraw below happens; otherwise there will be
-    " leftovers from selecta on the screen
+    try
+        let selection = system(a:choice_command . " | selecta " .  a:selecta_args)
+        " Escape spaces in the file name. That ensures that it's a
+        " single argument
+        " when concatenated with vim_command and run with exec.
+        let selection = substitute(selection, ' ', '\\ ', "g")
+    catch /Vim:Interrupt/
+        " Swallow the ^C so that the redraw below happens; otherwise there will be
+        " leftovers from selecta on the screen
+        redraw!
+        return
+    endtry
     redraw!
-    return
-  endtry
-  redraw!
-  exec a:vim_command . " " .  selection
+    exec a:vim_command . " " .  selection
 endfunction
 
 function! SelectaFile(path, glob, command)
-  call SelectaCommand("find " . a:path . "/* -type f -and -not -path '*/node_modules/*' -and -not -path '*/_build/*' -and -not -path '*/build/*' -and -iname '" . a:glob . "' -and -not -iname '*.pyc' -and -not -ipath '*/tmp/*' -and -not -ipath '*/.meteor/*' -and -not -iname '*.png' -and -not -iname '*.jpg' -and -not -iname '*.eps' -and -not -iname '*.pdf' -and -not -iname '*.svg' -and -not -iname '*.ttf'", "", a:command)
+    call SelectaCommand("find " . a:path . "/* -type f -and -not -path '*/node_modules/*' -and -not -path '*/_build/*' -and -not -path '*/build/*' -and -iname '" . a:glob . "' -and -not -iname '*.pyc' -and -not -ipath '*/tmp/*' -and -not -ipath '*/.meteor/*' -and -not -iname '*.png' -and -not -iname '*.jpg' -and -not -iname '*.eps' -and -not -iname '*.pdf' -and -not -iname '*.svg' -and -not -iname '*.ttf'", "", a:command)
 endfunction
 
 augroup vimrcEx
-  " Clear all autocmds in the group
-  autocmd!
-  " autocmd FileType text setlocal textwidth=78
-  " Jump to last cursor position unless it's invalid or in an event handler
-  autocmd BufReadPost *
-        \ if line("'\"") > 0 && line("'\"") <= line("$") |
-        \   exe "normal g`\"" |
-        \ endif
+    " Clear all autocmds in the group
+    autocmd!
+    " autocmd FileType text setlocal textwidth=78
+    " Jump to last cursor position unless it's invalid or in an event handler
+    autocmd BufReadPost *
+                \ if line("'\"") > 0 && line("'\"") <= line("$") |
+                \   exe "normal g`\"" |
+                \ endif
 
-  "for ruby, autoindent with two spaces, always expand tabs
-  autocmd FileType ruby,haml,eruby,yaml,html,sass,cucumber set ai sw=2 sts=2 et
-  " autocmd FileType python set sw=4 sts=4 et
+    "for ruby, autoindent with two spaces, always expand tabs
+    autocmd FileType ruby,haml,eruby,yaml,html,sass,cucumber set ai sw=2 sts=2 et
+    " autocmd FileType python set sw=4 sts=4 et
+    autocmd FileType elm set ai sw=4 sts=4 et
 
-  autocmd! BufRead,BufNewFile *.sass setfiletype sass
+    autocmd! BufRead,BufNewFile *.sass setfiletype sass
 
-  " autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:&gt;
-  " autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
+    " autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:&gt;
+    " autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
 
-  " Indent p tags
-  " autocmd FileType html,eruby if g:html_indent_tags !~ '\\|p\>' | let g:html_indent_tags .= '\|p\|li\|dt\|dd' | endif
+    " Indent p tags
+    " autocmd FileType html,eruby if g:html_indent_tags !~ '\\|p\>' | let g:html_indent_tags .= '\|p\|li\|dt\|dd' | endif
 
-  " " Don't syntax highlight markdown because it's often wrong
-  " autocmd! FileType mkd setlocal syn=off
+    " " Don't syntax highlight markdown because it's often wrong
+    " autocmd! FileType mkd setlocal syn=off
 
-  " Leave the return key alone when in command line windows, since it's used
-  " to run commands there.
-  autocmd! CmdwinEnter * :unmap <cr>
-  autocmd! BufReadPost quickfix nnoremap <CR> <CR>
-  autocmd! CmdwinLeave * :call MapCR()
+    " Leave the return key alone when in command line windows, since it's used
+    " to run commands there.
+    autocmd! CmdwinEnter * :unmap <cr>
+    autocmd! BufReadPost quickfix nnoremap <CR> <CR>
+    autocmd! CmdwinLeave * :call MapCR()
 
-  " " *.md is markdown
-  " autocmd! BufNewFile,BufRead *.md setlocal ft=
+    " " *.md is markdown
+    " autocmd! BufNewFile,BufRead *.md setlocal ft=
 
-  " indent slim two spaces, not four
-  autocmd! FileType slim set sw=2 sts=2 et
+    " indent slim two spaces, not four
+    autocmd! FileType slim set sw=2 sts=2 et
 augroup END
 
 
 map <leader>gr :topleft :split config/routes.rb<cr>
 function! ShowRoutes()
-  " Requires 'scratch' plugin
-  :topleft 100 :split __Routes__
-  " Make sure Vim doesn't write __Routes__ as a file
-  :set buftype=nofile
-  " Delete everything
-  :normal 1GdG
-  " Put routes output in buffer
-  :0r! rake -s routes
-  " Size window to number of lines (1 plus rake output length)
-  :exec ":normal " . line("$") . "_ "
-  " Move cursor to bottom
-  :normal 1GG
-  " Delete empty trailing line
-  :normal dd
+    " Requires 'scratch' plugin
+    :topleft 100 :split __Routes__
+    " Make sure Vim doesn't write __Routes__ as a file
+    :set buftype=nofile
+    " Delete everything
+    :normal 1GdG
+    " Put routes output in buffer
+    :0r! rake -s routes
+    " Size window to number of lines (1 plus rake output length)
+    :exec ":normal " . line("$") . "_ "
+    " Move cursor to bottom
+    :normal 1GG
+    " Delete empty trailing line
+    :normal dd
 endfunction
 map <leader>gR :call ShowRoutes()<cr>
 
 function! Fifo(cmd)
-  :silent! exe '!echo "clear; cd ' . getcwd() . ' && ' . a:cmd . '" > /tmp/cmds'
-  :redraw!
+    :silent! exe '!echo "clear; cd ' . getcwd() . ' && ' . a:cmd . '" > /tmp/cmds'
+    :redraw!
 endfunction
 
 
