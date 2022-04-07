@@ -186,7 +186,7 @@ map <leader>p :CtrlP<cr>
 " nnoremap <leader>p :call SelectaFile(".", "*", ":edit")<cr>
 
 " Run ale autofix
-map <leader>r :w \| :ALEFix<cr>
+map <leader>r :w<cr> \| :ALEFix<cr> \| :w<cr>
 
 " spell check
 map <leader>s ]s
