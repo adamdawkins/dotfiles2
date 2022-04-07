@@ -216,6 +216,7 @@ set wildignore=**/node_modules?**,**/tmp/**,**/vendor/bundle/**,**/fixtures/vcr_
 " ALE Syntax checker setup
 " "
 let g:ale_javascript_prettier_use_global = 1
+let g:ale_ruby_rubocop_executable = 'bundle'
 
 let g:ale_fixers = {
             \   '*': ['remove_trailing_lines', 'trim_whitespace'],
