@@ -1,7 +1,3 @@
-
-
-
-
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -41,7 +37,7 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'adelarsq/vim-matchit'
 
 " Comments
-Plugin 'tomtom/tcomment_vim'
+Plugin 'tpope/vim-commentary'
 
 " "Emmet
 Plugin 'mattn/emmet-vim'
