@@ -96,6 +96,7 @@ Plugin 'pocke/rbs.vim'
 "      SQL
 " Plugin 'vim-scripts/SQLUtilities'
 
+
 "       TypeScript
 " Plugin 'leafgarland/typescript-vim'
 
@@ -113,7 +114,6 @@ Plugin 'dense-analysis/ale'
 
 " tmux intexgration
 " Plugin 'christoomey/vim-tmux-runner'
-
 
 " " Undo History
 Plugin 'sjl/gundo.vim'
