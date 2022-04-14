@@ -550,4 +550,5 @@ if 8 <= hour && hour < 18
 else
   set background=dark
 end
+  set background=dark
 colorscheme gruvbox

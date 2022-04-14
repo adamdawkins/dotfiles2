@@ -37,3 +37,6 @@
 	ff = only
 [init]
 	defaultBranch = main
+[user]
+	name = Adam Dawkins
+	email = adam@dragondrop.uk
