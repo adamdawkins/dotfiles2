@@ -6,6 +6,8 @@ filetype off                  " required
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
+runtime macros/matchit.vim
+
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
@@ -19,13 +21,17 @@ Plugin 'kien/ctrlp.vim'
 " Vim motions on speed!
 Plugin 'easymotion/vim-easymotion'
 
+" Select ruby blocks
+Plugin 'kana/vim-textobj-user'
+Plugin 'nelstrom/vim-textobj-rubyblock'
+
 " " Table Mode
 " Plugin 'dhruvasagar/vim-table-mode'
 
 " Plugin 'emugel/vim-sum'
 
 " " A scratch file
-" Plugin 'vim-scripts/scratch.vim'
+Plugin 'vim-scripts/scratch.vim'
 
 " Surround
 Plugin 'tpope/vim-surround'
@@ -42,6 +48,8 @@ Plugin 'tpope/vim-commentary'
 " "Emmet
 Plugin 'mattn/emmet-vim'
 
+" Search
+Plugin 'mileszs/ack.vim'
 
 " " GIT
 Plugin 'tpope/vim-fugitive'
@@ -55,7 +63,7 @@ Plugin 'tpope/vim-fugitive'
 " Plugin 'elixir-editors/vim-elixir'
 
 "      elm
-Plugin 'ElmCast/elm-vim'
+" Plugin 'ElmCast/elm-vim'
 
 "      Erlang
 " Plugin 'vim-erlang/vim-erlang-omnicomplete'
@@ -69,13 +77,13 @@ Plugin 'ElmCast/elm-vim'
 " Plugin 'lukerandall/haskellmode-vim'
 
 "      Javascript
-" Plugin 'maxmellon/vim-jsx-pretty'
+Plugin 'maxmellon/vim-jsx-pretty'
 " Plugin 'pangloss/vim-javascript'
 " Plugin 'prettier/vim-prettier'
 
 " "      Markdown
 " Plugin 'godlygeek/tabular'
-" Plugin 'plasticboy/vim-markdown'
+Plugin 'plasticboy/vim-markdown'
 
 " Nunjucks
 " Plugin 'niftylettuce/vim-jinja'
@@ -84,6 +92,8 @@ Plugin 'ElmCast/elm-vim'
 " Plugin '2072/PHP-Indenting-for-VIm'
 " Plugin 'lumiliet/vim-twig'
 
+"   Plant UML
+Plugin 'aklt/plantuml-syntax'
 "      Python
 " Plugin 'vim-scripts/indentpython.vim'
 
@@ -91,7 +101,7 @@ Plugin 'ElmCast/elm-vim'
 " Plugin 'joker1007/vim-ruby-heredoc-syntax'
 " Plugin 'despo/vim-ruby-refactoring'
 Plugin 'vim-ruby/vim-ruby'
-Plugin 'pocke/rbs.vim'
+" Plugin 'pocke/rbs.vim'
 
 "      SQL
 " Plugin 'vim-scripts/SQLUtilities'
@@ -103,7 +113,7 @@ Plugin 'pocke/rbs.vim'
 ""     TOOLS
 Plugin 'AndrewRadev/splitjoin.vim' " Switch between single-line and multiline forms of code
 Plugin 'tpope/vim-rails'
-" Plugin 'tpope/vim-endwise'
+Plugin 'tpope/vim-endwise'
 " Plugin 'ycm-core/YouCompleteMe' " A code-completion engine for Vim
 Plugin 'tpope/vim-abolish' " Working with words
 " Plugin 'ternjs/tern_for_vim' " JS autocomplete
@@ -119,6 +129,7 @@ Plugin 'dense-analysis/ale'
 Plugin 'sjl/gundo.vim'
 
 Plugin 'morhetz/gruvbox'
+Plugin 'altercation/vim-colors-solarized'
 
 call vundle#end()
 filetype plugin indent on
@@ -176,6 +187,7 @@ map <leader>j :wa\|execute ':silent !npm run webpack --mode production' \| execu
 :map <leader>l :PromoteToLet<cr>
 
 map <leader>m :call MkDir()<cr>
+map <leader>n :bn<cr>
 
 " Open the current file (in whatever it normally opens in)
 map <leader>o :!open %<cr>
@@ -233,9 +245,11 @@ let g:ale_linters = {
             \}
 
 let g:ale_fix_on_save = 0
+let g:ale_set_loclist = 1
+let g:ale_set_quickfix = 0
 
-let g:prettier#autoformat = 0
-let g:prettier#autoformat_require_pragma = 0
+" let g:prettier#autoformat = 1
+" let g:prettier#autoformat_require_pragma = 0
 
 set omnifunc=syntaxcomplete#Complete
 
@@ -270,8 +284,9 @@ set ignorecase
 set smartcase " searches case insensitive with lower-case letters, but sensitive with uppercase
 
 " automatically rebalance windows on vim resize
-autocmd VimResized * :wincmd =
-set winwidth=126 " the 120 + some space for the line numbers and linting bar  ¯\_(ツ)_/¯
+" autocmd VimResized * :wincmd =
+set winwidth=86 " the 100 + some space for the line numbers and linting bar  ¯\_(ツ)_/¯
+"set winheight=30
 
 
 " make directory for current file
@@ -439,8 +454,8 @@ augroup vimrcEx
 
     autocmd! BufRead,BufNewFile *.sass setfiletype sass
 
-    " autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:&gt;
-    " autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
+    autocmd BufRead *.md  set ai formatoptions=tcroqn2 comments=n:&gt;
+    autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
 
     " Indent p tags
     " autocmd FileType html,eruby if g:html_indent_tags !~ '\\|p\>' | let g:html_indent_tags .= '\|p\|li\|dt\|dd' | endif
@@ -493,7 +508,6 @@ set tabstop=2
 set expandtab
 
 set number
-" set winwidth=79
 
 " Prevent Vim from clobbering the scrollback buffer. See
 " http://www.shallowsky.com/linux/noaltscreen.html
@@ -526,6 +540,11 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 " au FileType markdown setlocal nofoldenable
 "
 
+set nocompatible
+if has("autocmd")
+    filetype indent plugin on
+endif
+
 :iabbrev constructor constructor(props) {<cr>super(props);<cr><cr>}<UP>
 
 :set tags=tags
@@ -534,21 +553,21 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 :set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
 :set diffopt=vertical
 
+:set showtabline=0
+:set nowrap
 
 " COLORS
 
-let g:solarized_termcolors=256
-
-:set t_Co=256 " 256 colors
+:set t_Co=256
 :set cursorline
 :set colorcolumn=120
-:set cursorcolumn
 
-let hour = strftime("%H")
-if 8 <= hour && hour < 18
-  set background=light
-else
-  set background=dark
-end
+" let hour = strftime("%H")
+" if 8 <= hour && hour < 22
+"   set background=light
+" else
+"   set background=dark
+" end
+let g:gruvbox_termcolors=16
   set background=dark
 colorscheme gruvbox

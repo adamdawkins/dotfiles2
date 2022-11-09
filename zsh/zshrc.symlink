@@ -6,7 +6,7 @@ export PROJECTS=~/dev
 
 export EDITOR=vim
 export GIT_EDITOR=vim
-
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 # Stash your environment variables in ~/.localrc. This means they'll stay out
 # of your main dotfiles repository (which may be public, like this one), but
 # you'll have access to them in your scripts.
@@ -43,7 +43,6 @@ done
 
 unset config_files
 
-source "$HOME/.vim/bundle/gruvbox/gruvbox_256palette.sh"
 
 
 # Better history
@@ -63,3 +62,5 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+export SSL_CERT_FILE=/opt/homebrew/etc/openssl@3/cert.pem
+autoload -Uz compinit && compinit
