@@ -16,6 +16,8 @@ set-option -g status-left-length 50
 
 bind-key - split-window -v -c '#{pane_current_path}'
 bind-key \\ split-window -h -c '#{pane_current_path}'
+bind-key | split-window -h -c '#{pane_current_path}'
+bind-key b break-pane
 
 bind c new-window -c '#{pane_current_path}'
 

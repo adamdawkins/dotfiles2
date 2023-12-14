@@ -41,3 +41,5 @@
 [user]
 	name = adamdawkins
 	email = adam@dragondrop.uk
+[diff]
+	tool = vimdiff

@@ -20,6 +20,8 @@ Plugin 'kien/ctrlp.vim'
 " EDITOR
 " Vim motions on speed!
 Plugin 'easymotion/vim-easymotion'
+" Plugin 'junegunn/goyo.vim'
+" Plugin 'sotte/presenting.vim'
 
 " Select ruby blocks
 Plugin 'kana/vim-textobj-user'
@@ -49,7 +51,7 @@ Plugin 'tpope/vim-commentary'
 Plugin 'mattn/emmet-vim'
 
 " Search
-Plugin 'mileszs/ack.vim'
+" Plugin 'mileszs/ack.vim'
 
 " " GIT
 Plugin 'tpope/vim-fugitive'
@@ -59,7 +61,7 @@ Plugin 'tpope/vim-fugitive'
 "       CoffeeScript
 " Plugin 'kchmck/vim-coffee-script'
 
-"      elixir
+" "      elixir
 " Plugin 'elixir-editors/vim-elixir'
 
 "      elm
@@ -67,6 +69,9 @@ Plugin 'tpope/vim-fugitive'
 
 "      Erlang
 " Plugin 'vim-erlang/vim-erlang-omnicomplete'
+"
+" "      Go
+" Plugin 'fatih/vim-go'
 
 "      GraphQL
 " Plugin 'jparise/vim-graphql'
@@ -75,15 +80,20 @@ Plugin 'tpope/vim-fugitive'
 "      Haskell
 " Plugin 'alx741/vim-stylishask'
 " Plugin 'lukerandall/haskellmode-vim'
+"
+"      HTML
+Plugin 'othree/html5.vim'
+
 
 "      Javascript
-Plugin 'maxmellon/vim-jsx-pretty'
-" Plugin 'pangloss/vim-javascript'
+" Plugin 'maxmellon/vim-jsx-pretty'
+Plugin 'pangloss/vim-javascript'
 " Plugin 'prettier/vim-prettier'
 
 " "      Markdown
 " Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
+" Plugin 'plasticboy/vim-markdown'
+" Plugin 'iamcco/markdown-preview.vim'
 
 " Nunjucks
 " Plugin 'niftylettuce/vim-jinja'
@@ -93,14 +103,15 @@ Plugin 'plasticboy/vim-markdown'
 " Plugin 'lumiliet/vim-twig'
 
 "   Plant UML
-Plugin 'aklt/plantuml-syntax'
+" Plugin 'aklt/plantuml-syntax'
 "      Python
 " Plugin 'vim-scripts/indentpython.vim'
 
 "      Ruby
 " Plugin 'joker1007/vim-ruby-heredoc-syntax'
-" Plugin 'despo/vim-ruby-refactoring'
+Plugin 'despo/vim-ruby-refactoring'
 Plugin 'vim-ruby/vim-ruby'
+" Plugin 'sovetnik/vim-hanami'
 " Plugin 'pocke/rbs.vim'
 
 "      SQL
@@ -128,10 +139,10 @@ Plugin 'dense-analysis/ale'
 " " Undo History
 Plugin 'sjl/gundo.vim'
 
+" Plugin 'altercation/vim-colors-solarized'
 Plugin 'morhetz/gruvbox'
-Plugin 'altercation/vim-colors-solarized'
-
 call vundle#end()
+
 filetype plugin indent on
 
 
@@ -141,10 +152,8 @@ filetype plugin indent on
 let mapleader=',' " map leader to comma
 let maplocalleader='\'
 
-" Vtr config
-let g:VtrStripLeadingWhitespace = 0
-let g:VtrClearEmptyLines = 0
-let g:VtrAppendNewline = 1
+
+let g:vim_markdown_folding_disabled = 1
 
 " map spacebar to :
 nmap <Space> :
@@ -155,8 +164,8 @@ nmap <leader>3 :b#<cr>
 " map ,. to switch between test/production
 nmap <leader>. :A<cr>
 
-nmap <leader>a <Plug>VimSumOperatorPending
-vmap <leader>a <Plug>VimSumVisual
+nmap <silent> <leader>an :ALENext<cr>
+nmap <silent> <leader>ap :ALEPrevious<cr>
 
 " ctrl p for current buffers
 map <leader>b :CtrlPBuffer<cr>
@@ -200,8 +209,7 @@ map <leader>p :CtrlP<cr>
 " Run ale autofix
 map <leader>r :w<cr> \| :ALEFix<cr> \| :w<cr>
 
-" spell check
-map <leader>s ]s
+map <leader>s :w<cr> \|:!srb t<cr>
 
 " <leader>T mapped by Testing (line #204)
 
@@ -223,11 +231,11 @@ map <C-j> <C-w><C-j>
 map <C-k> <C-w><C-k>
 
 " ignore some stuff always
-set wildignore=**/node_modules?**,**/tmp/**,**/vendor/bundle/**,**/fixtures/vcr_cassettes/**/*,**/coverage/**,**/build/**,**/public/packs/**
+set wildignore=**/node_modules?**,**/tmp/**,**/vendor/bundle/**,**/fixtures/vcr_cassettes/**/*,**/coverage/**,**/build/**,**/public/packs/**,**/public/packs-test/**,**/elm-stuff/**,**/dist**,_site/**
 
 " ALE Syntax checker setup
 " "
-let g:ale_javascript_prettier_use_global = 1
+let g:ale_javascript_prettier_use_global = 0
 let g:ale_ruby_rubocop_executable = 'bundle'
 
 let g:ale_fixers = {
@@ -244,16 +252,17 @@ let g:ale_linters = {
             \   'css': [],
             \}
 
-let g:ale_fix_on_save = 0
+let g:ale_fix_on_save = 1
 let g:ale_set_loclist = 1
 let g:ale_set_quickfix = 0
 
-" let g:prettier#autoformat = 1
+let g:prettier#autoformat = 0
 " let g:prettier#autoformat_require_pragma = 0
 
 set omnifunc=syntaxcomplete#Complete
 
 let g:elm_setup_keybindings = 0
+let g:elm_format_autosave = 1
 
 
 
@@ -285,7 +294,7 @@ set smartcase " searches case insensitive with lower-case letters, but sensitive
 
 " automatically rebalance windows on vim resize
 " autocmd VimResized * :wincmd =
-set winwidth=86 " the 100 + some space for the line numbers and linting bar  ¯\_(ツ)_/¯
+set winwidth=104 " the 100 + some space for the line numbers and linting bar  ¯\_(ツ)_/¯
 "set winheight=30
 
 
@@ -353,7 +362,7 @@ function! RunTestFile(...)
     endif
 
     " Are we in a test file?
-    let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\|test_.*\.py\|_test.py\|Test.hs\)$') != -1
+    let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\|test_.*\.py\|_test.py\|Test.hs\|*.test.js\)$') != -1
 
     " Run the tests for the previously-marked file (or the current file if
     " it's a test).
@@ -403,7 +412,7 @@ function! RunTests(filename)
         redraw!
         " Fall back to a blocking test run with Bundler
     elseif filereadable("bin/rails test")
-        exec ":call Fifo('bin/rails test --color --fail-fast " . a:filename . "')"
+        exec ":call Fifo('bin/rails test --color --format documentation --fail-fast " . a:filename . "')"
     elseif filereadable("Gemfile") && strlen(glob("spec/**/*.rb"))
         exec ":call Fifo('bundle exec rails test --format documentation --color --fail-fast " . a:filename . "')"
     elseif filereadable("Gemfile") && strlen(glob("test/**/*.rb"))
@@ -449,16 +458,19 @@ augroup vimrcEx
 
     "for ruby, autoindent with two spaces, always expand tabs
     autocmd FileType ruby,haml,eruby,yaml,html,sass,cucumber set ai sw=2 sts=2 et
-    " autocmd FileType python set sw=4 sts=4 et
-    autocmd FileType elm set ai sw=4 sts=4 et
+    autocmd FileType python set sw=4 sts=4 et
+    " autocmd FileType elm set ai sw=4 sts=4 et
+    " autocmd FileType elm set cursorline cursorcolumn
+    " autocmd FileType elm set cc=80
 
     autocmd! BufRead,BufNewFile *.sass setfiletype sass
+    autocmd BufRead,BufNewFile *.erb set filetype=eruby.html
 
-    autocmd BufRead *.md  set ai formatoptions=tcroqn2 comments=n:&gt;
-    autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
+    " autocmd BufRead *.md  set ai formatoptions=tcroqn2 comments=n:&gt;
+    " autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
 
-    " Indent p tags
-    " autocmd FileType html,eruby if g:html_indent_tags !~ '\\|p\>' | let g:html_indent_tags .= '\|p\|li\|dt\|dd' | endif
+    autocmd FileType html,eruby if g:html_indent_tags !~ '\\|p\>' | let g:html_indent_tags .= '\|p\|li\|dt\|dd' | endif
+
 
     " " Don't syntax highlight markdown because it's often wrong
     " autocmd! FileType mkd setlocal syn=off
@@ -479,26 +491,26 @@ augroup END
 
 map <leader>gr :topleft :split config/routes.rb<cr>
 function! ShowRoutes()
-    " Requires 'scratch' plugin
-    :topleft 100 :split __Routes__
-    " Make sure Vim doesn't write __Routes__ as a file
-    :set buftype=nofile
-    " Delete everything
-    :normal 1GdG
-    " Put routes output in buffer
-    :0r! bundle exec rails -s routes
-    " Size window to number of lines (1 plus rake output length)
-    :exec ":normal " . line("$") . "_ "
-    " Move cursor to bottom
-    :normal 1GG
-    " Delete empty trailing line
-    :normal dd
+  " Requires 'scratch' plugin
+  :topleft 100 :split __Routes__
+  " Make sure Vim doesn't write __Routes__ as a file
+  :set buftype=nofile
+  " Delete everything
+  :normal 1GdG
+  " Put routes output in buffer
+  :0r! bundle exec rails -s routes
+  " Size window to number of lines (1 plus rake output length)
+  :exec ":normal " . line("$") . "_ "
+  " Move cursor to bottom
+  :normal 1GG
+  " Delete empty trailing line
+  :normal dd
 endfunction
 map <leader>gR :call ShowRoutes()<cr>
 
 function! Fifo(cmd)
-    :silent! exe '!echo "clear; cd ' . getcwd() . ' && ' . a:cmd . '" > /tmp/cmds'
-    :redraw!
+  :silent! exe '!echo "clear; cd ' . getcwd() . ' && ' . a:cmd . '" > /tmp/cmds'
+  :redraw!
 endfunction
 
 
@@ -545,7 +557,9 @@ if has("autocmd")
     filetype indent plugin on
 endif
 
-:iabbrev constructor constructor(props) {<cr>super(props);<cr><cr>}<UP>
+:iabbrev appoinment appointment
+:iabbrev Appoinment Appointment
+:iabbrev APPOINMENT APPOINTMENT
 
 :set tags=tags
 :set tags^=./.git/tags;
@@ -562,12 +576,8 @@ endif
 :set cursorline
 :set colorcolumn=120
 
-" let hour = strftime("%H")
-" if 8 <= hour && hour < 22
-"   set background=light
-" else
-"   set background=dark
-" end
-let g:gruvbox_termcolors=16
-  set background=dark
+
+set background=dark
+let g:gruvbox_contrast_dark='normal'
+let g:gruvbox_contrast_light='normal'
 colorscheme gruvbox

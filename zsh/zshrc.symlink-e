@@ -58,14 +58,7 @@ bindkey "^R" history-incremental-search-backward
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
-source $HOME/.rvm/scripts/rvm
-
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 export SSL_CERT_FILE=/opt/homebrew/etc/openssl@3/cert.pem
-
-[ -f "/Users/adamdawkins/.ghcup/env" ] && source "/Users/adamdawkins/.ghcup/env" # ghcup-env
-export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
-eval $(thefuck --alias)
