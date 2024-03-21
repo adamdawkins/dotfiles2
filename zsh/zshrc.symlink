@@ -1,5 +1,7 @@
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
+export TIMEFMT=$'real\t%E\nuser\t%U\nsys\t%S'
+
 
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/dev
@@ -14,7 +16,6 @@ if [[ -a ~/.localrc ]]
 then
   source ~/.localrc
 fi
-source "$HOME/.vim/bundle/gruvbox/gruvbox_256palette.sh"
 
 # all of our zsh files
 typeset -U config_files
@@ -67,5 +68,5 @@ export SSL_CERT_FILE=/opt/homebrew/etc/openssl@3/cert.pem
 
 [ -f "/Users/adamdawkins/.ghcup/env" ] && source "/Users/adamdawkins/.ghcup/env" # ghcup-env
 export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
-eval $(thefuck --alias)
+# export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+# eval $(thefuck --alias)
