@@ -93,9 +93,6 @@ map <leader>b :CtrlPBuffer<cr>
 
 map <leader>B :wa\|execute ':silent !npm run build' \| execute ':redraw!' \| :silent !reload-chrome<cr>
 
-" react class => className
-map <leader>c :%s/class=/className=/g<cr>
-
 map <leader>d :ALEDetail<cr>
 
 nnoremap <leader>e :call SelectaFile(expand('%:h'), "*", ":edit")<cr>
