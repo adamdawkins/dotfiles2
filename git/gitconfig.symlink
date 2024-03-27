@@ -43,3 +43,5 @@
 	email = adam@dragondrop.uk
 [diff]
 	tool = vimdiff
+[maintenance]
+	repo = /Users/adamdawkins/dev/victory-quotes
