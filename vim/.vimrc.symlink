@@ -76,9 +76,6 @@ let g:vim_markdown_folding_disabled = 1
 " map spacebar to :
 nmap <Space> :
 
-" map leader 3 to b#, buffer switch
-nmap <leader>3 :b#<cr>
-
 " map ,. to switch between test/production
 nmap <leader>. :A<cr>
 
@@ -88,12 +85,9 @@ nmap <silent> <leader>ap :ALEPrevious<cr>
 " ctrl p for current buffers
 map <leader>b :CtrlPBuffer<cr>
 
-map <leader>B :wa\|execute ':silent !npm run build' \| execute ':redraw!' \| :silent !reload-chrome<cr>
-
 map <leader>d :ALEDetail<cr>
 
-nnoremap <leader>e :call SelectaFile(expand('%:h'), "*", ":edit")<cr>
-
+map <leader>lb :set linebreak<cr>
 
 " Ruby refactoring shortcuts
 :nnoremap <leader>rap  :RAddParameter<cr>
@@ -106,15 +100,6 @@ nnoremap <leader>e :call SelectaFile(expand('%:h'), "*", ":edit")<cr>
 :vnoremap <leader>rriv :RRenameInstanceVariable<cr>
 :vnoremap <leader>rem  :RExtractMethod<cr>
 
-" nnoremap <leader>gv :call SelectaFile("app/views", "*", ":edit")<cr>
-" nnoremap <leader>gc :call SelectaFile("app/controllers", "*", ":edit")<cr>
-" nnoremap <leader>gm :call SelectaFile("app/models", "*", ":edit")<cr>
-" nnoremap <leader>gh :call SelectaFile("app/helpers", "*", ":edit")<cr>
-" nnoremap <leader>gl :call SelectaFile("lib", "*", ":edit")<cr>
-" nnoremap <leader>gp :call SelectaFile("public", "*", ":edit")<cr>
-" nnoremap <leader>gs :call SelectaFile("app/assets/stylesheets", "*.sass", ":edit")<cr>
-" nnoremap <leader>gt :call SelectaFile("app/spec", "*", ":edit")<cr>
-"
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " RENAME CURRENT FILE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -129,8 +114,6 @@ function! RenameFile()
 endfunction
 map <leader>rn :call RenameFile()<cr>
 
-map <leader>j :wa\|execute ':silent !npm run webpack --mode production' \| execute ':redraw!' \| :silent !reload-chrome<cr>
-
 :map <leader>l :PromoteToLet<cr>
 
 map <leader>m :call MkDir()<cr>
@@ -138,13 +121,9 @@ map <leader>n :bn<cr>
 
 " Open CtrlP
 map <leader>p :CtrlP<cr>
-" force selecta instead of CtrlP for a bit
-" nnoremap <leader>p :call SelectaFile(".", "*", ":edit")<cr>
 
 " open relative file
 map <leader>r :R<cr>
-
-map <leader>s :w<cr> \|:!srb t<cr>
 
 " <leader>T mapped by Testing (line #204)
 
@@ -189,13 +168,13 @@ let g:ale_fix_on_save = 1
 let g:ale_set_loclist = 1
 let g:ale_set_quickfix = 0
 
-let g:prettier#autoformat = 0
+" let g:prettier#autoformat = 0
 " let g:prettier#autoformat_require_pragma = 0
 
 set omnifunc=syntaxcomplete#Complete
 
-let g:elm_setup_keybindings = 0
-let g:elm_format_autosave = 1
+" let g:elm_setup_keybindings = 0
+" let g:elm_format_autosave = 1
 
 
 let g:rails_projections = {
