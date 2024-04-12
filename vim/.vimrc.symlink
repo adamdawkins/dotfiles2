@@ -59,7 +59,6 @@ Plugin 'dense-analysis/ale'
 " COLOR SCHEMES
 Plugin 'jonathanfilip/vim-lucius'
 
-" Plugin 'github/copilot.vim'
 call vundle#end()
 
 filetype plugin indent on
