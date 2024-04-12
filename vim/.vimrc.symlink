@@ -517,6 +517,5 @@ endif
 :set cursorcolumn
 :set colorcolumn=120
 
-let g:lucius_contrast_bg='high'
 colorscheme lucius
 set background=dark
