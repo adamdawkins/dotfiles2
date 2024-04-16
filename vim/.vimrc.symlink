@@ -85,6 +85,9 @@ nmap <silent> <leader>ap :ALEPrevious<cr>
 " ctrl p for current buffers
 map <leader>b :CtrlPBuffer<cr>
 
+" Replace creates with builds in specs
+map <leader>cb :%s/create(/build(/gc<cr>
+
 map <leader>d :ALEDetail<cr>
 
 map <leader>lb :set linebreak<cr>
