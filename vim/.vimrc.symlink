@@ -122,6 +122,8 @@ map <leader>rn :call RenameFile()<cr>
 map <leader>m :call MkDir()<cr>
 map <leader>n :bn<cr>
 
+map <leader>o :!open %<cr>
+
 " Open CtrlP
 map <leader>p :CtrlP<cr>
 
