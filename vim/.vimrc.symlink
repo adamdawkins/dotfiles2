@@ -523,4 +523,10 @@ endif
 :set colorcolumn=120
 
 colorscheme lucius
-set background=dark
+let iterm_profile = $ITERM_PROFILE
+
+if iterm_profile == "Dark"
+    set background=dark
+else
+    set background=light
+endif

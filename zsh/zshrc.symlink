@@ -70,3 +70,25 @@ export SSL_CERT_FILE=/opt/homebrew/etc/openssl@3/cert.pem
 export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
 # export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 # eval $(thefuck --alias)
+
+if [[ "$(uname -s)" == "Darwin" ]]; then
+    sith() {
+        val=$(defaults read -g AppleInterfaceStyle 2>/dev/null)
+        if [[ $val == "Dark" ]]; then
+            go_dark
+        else
+            go_default
+        fi
+    }
+
+    go_dark() {
+      echo -ne "\033]50;SetProfile=Dark\a"
+      export ITERM_PROFILE="Dark"
+    }
+
+    go_default() {
+      echo -ne "\033]50;SetProfile=Default\a"
+      export ITERM_PROFILE="Default"
+    }
+    sith
+fi
