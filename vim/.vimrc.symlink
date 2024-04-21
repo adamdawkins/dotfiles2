@@ -85,6 +85,9 @@ nmap <silent> <leader>ap :ALEPrevious<cr>
 " ctrl p for current buffers
 map <leader>b :CtrlPBuffer<cr>
 
+"splits commas on current line onto new lines
+map <leader>cs :s/,/,\r/g<cr>
+
 " Replace creates with builds in specs
 map <leader>cb :%s/create(/build(/gc<cr>
 
