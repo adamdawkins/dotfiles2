@@ -120,7 +120,6 @@ function! RenameFile()
 endfunction
 map <leader>rn :call RenameFile()<cr>
 
-:map <leader>l :PromoteToLet<cr>
 
 map <leader>m :call MkDir()<cr>
 map <leader>n :bn<cr>
@@ -259,20 +258,6 @@ autocmd VimResized * :wincmd =
 function MkDir()
     exe '!mkdir -p %:h'
 endfunction
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" PROMOTE VARIABLE TO RSPEC LET
-" """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! PromoteToLet()
-    :normal! dd
-    " :exec '?^\s*it\>'
-    :normal! P
-    :.s/\(\w\+\) = \(.*\)$/let(:\1) { \2 }/
-    :normal ==
-endfunction
-:command! PromoteToLet :call PromoteToLet()
-
 
 """ TESTING (from https://github.com/garybernhardt/dotfiles/blob/master/.vimrc)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
