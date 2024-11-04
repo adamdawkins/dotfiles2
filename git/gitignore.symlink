@@ -6,3 +6,7 @@
 *.swo
 tags
 bin/test
+sql.sql
+TODO
+ruby.rb
+.rspec_parallel

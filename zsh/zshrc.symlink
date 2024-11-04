@@ -6,8 +6,8 @@ export TIMEFMT=$'real\t%E\nuser\t%U\nsys\t%S'
 # your project folder that we can `c [tab]` to
 export PROJECTS=~/dev
 
-export EDITOR=vim
-export GIT_EDITOR=vim
+set -o vi
+
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 # Stash your environment variables in ~/.localrc. This means they'll stay out
 # of your main dotfiles repository (which may be public, like this one), but
@@ -67,28 +67,30 @@ export NVM_DIR="$HOME/.nvm"
 export SSL_CERT_FILE=/opt/homebrew/etc/openssl@3/cert.pem
 
 [ -f "/Users/adamdawkins/.ghcup/env" ] && source "/Users/adamdawkins/.ghcup/env" # ghcup-env
-export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
-# export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
+# export PATH="/opt/homenrew/opt/openjdk/bin:$PATH"
 # eval $(thefuck --alias)
 
-if [[ "$(uname -s)" == "Darwin" ]]; then
-    sith() {
-        val=$(defaults read -g AppleInterfaceStyle 2>/dev/null)
-        if [[ $val == "Dark" ]]; then
-            go_dark
-        else
-            go_default
-        fi
-    }
+# if [[ "$(uname -s)" == "Darwin" ]]; then
+#     sith() {
+#         val=$(defaults read -g AppleInterfaceStyle 2>/dev/null)
+#         if [[ $val == "Dark" ]]; then
+#             go_dark
+#         else
+#             go_default
+#         fi
+#     }
 
-    go_dark() {
-      echo -ne "\033]50;SetProfile=Dark\a"
-      export ITERM_PROFILE="Dark"
-    }
+#     go_dark() {
+#       echo -ne "\033]50;SetProfile=Dark\a"
+#       export ITERM_PROFILE="Dark"
+#     }
 
-    go_default() {
-      echo -ne "\033]50;SetProfile=Default\a"
-      export ITERM_PROFILE="Default"
-    }
-    sith
-fi
+#     go_default() {
+#       echo -ne "\033]50;SetProfile=Default\a"
+#       export ITERM_PROFILE="Default"
+#     }
+#     sith
+# fi
+export EDITOR=vim
+export GIT_EDITOR=vim

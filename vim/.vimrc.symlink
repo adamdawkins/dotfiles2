@@ -39,25 +39,40 @@ Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-fugitive'
 
 " SYNTAXES
+"      Elixir
+Plugin 'elixir-editors/vim-elixir'
+"      Go
+Plugin 'fatih/vim-go'
+
 "      HTML
 Plugin 'othree/html5.vim'
 "      Javascript
 Plugin 'pangloss/vim-javascript'
+
 "      Ruby
 Plugin 'despo/vim-ruby-refactoring'
 Plugin 'vim-ruby/vim-ruby'
+Plugin 'thoughtbot/vim-rspec'
+
+" Purescript
+" Plugin 'purescript-contrib/purescript-vim'
 
 ""     TOOLS
 Plugin 'AndrewRadev/splitjoin.vim' " Switch between single-line and multiline forms of code
 Plugin 'tpope/vim-rails'
 Plugin 'tpope/vim-endwise'
 Plugin 'tpope/vim-abolish' " Working with words
+Plugin 'mileszs/ack.vim'
+Plugin 'mattn/emmet-vim'
+Plugin 'xavierchow/vim-sequence-diagram'
 
 " Syntax Checking
 Plugin 'dense-analysis/ale'
 
 " COLOR SCHEMES
 Plugin 'jonathanfilip/vim-lucius'
+Plugin 'nanotech/jellybeans.vim'
+Plugin 'junegunn/goyo.vim'
 
 call vundle#end()
 
@@ -81,6 +96,9 @@ nmap <leader>. :A<cr>
 
 nmap <silent> <leader>an :ALENext<cr>
 nmap <silent> <leader>ap :ALEPrevious<cr>
+nnoremap <leader>qf :ALECodeAction<CR>
+vnoremap <leader>qf :ALECodeAction<CR>
+vnoremap <leader>x :<C-u>write<Space><C-r>=input('Filename: ')<CR><CR>:'<,'>d<CR>
 
 " ctrl p for current buffers
 map <leader>b :CtrlPBuffer<cr>
@@ -88,17 +106,20 @@ map <leader>b :CtrlPBuffer<cr>
 "splits commas on current line onto new lines
 map <leader>cs :s/,/,\r/g<cr>
 
+map <leader>c :w<cr> \|:call Fifo('bin/cucumber')<cr>
+
 " Replace creates with builds in specs
 map <leader>cb :%s/create(/build(/gc<cr>
 
 map <leader>d :ALEDetail<cr>
+map <leader>rel :PromoteToLet<cr>
 
 map <leader>lb :set linebreak<cr>
 
 " Ruby refactoring shortcuts
 :nnoremap <leader>rap  :RAddParameter<cr>
 :nnoremap <leader>rcpc :RConvertPostConditional<cr>
-:nnoremap <leader>rel  :RExtractLet<cr>
+" :nnoremap <leader>rel  :RExtractLet<cr>
 :vnoremap <leader>rec  :RExtractConstant<cr>
 :vnoremap <leader>relv :RExtractLocalVariable<cr>
 :nnoremap <leader>rit  :RInlineTemp<cr>
@@ -106,19 +127,45 @@ map <leader>lb :set linebreak<cr>
 :vnoremap <leader>rriv :RRenameInstanceVariable<cr>
 :vnoremap <leader>rem  :RExtractMethod<cr>
 
+function! Tags()
+  exec ':!ripper-tags -R . --extra=q'
+endfunction
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" PASTE OVER CURRENT FILE
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! PasteHere()
+  exec ':!pbpaste > ' . expand('%')
+endfunction
+" using hp so that <leader>p isn't slowed down
+map <leader>hp :call PasteHere()<cr>
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " RENAME CURRENT FILE
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! RenameFile()
-    let old_name = expand('%')
-    let new_name = input('New file name: ', expand('%'), 'file')
-    if new_name != '' && new_name != old_name
-        exec ':saveas ' . new_name
-        exec ':silent !rm ' . old_name
-        redraw!
-    endif
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'), 'file')
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
 endfunction
 map <leader>rn :call RenameFile()<cr>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" PROMOTE VARIABLE TO RSPEC LET
+" """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! PromoteToLet()
+  :normal! dd
+  " :exec '?^\s*it\>'
+  :normal! P
+  :.s/\(\w\+\) = \(.*\)$/let(:\1) { \2 }/
+  :normal ==
+endfunction
+:command! PromoteToLet :call PromoteToLet()
+
+command Gblame execute ":Git blame -w -C -C -C"
 
 
 map <leader>m :call MkDir()<cr>
@@ -140,11 +187,17 @@ nmap <leader>f <C-]><cr>
 
 nnoremap <leader>v :call SelectaFile(expand('%:h'), "*", ":view")<cr>
 
+nmap <unique> <leader>sq <Plug>GenerateDiagram
+let g:generate_diagram_theme_hand = 1
+
+
+
 " Open ~/.vimrc
 map <leader>vi :e ~/.vimrc<cr>
 
 
 command Noswaps execute "!rm %:h/.%:t.sw*"
+command Vsql execute "w!<cr> \| :!psql -d victory_development -f %"
 
 map <C-l> <C-w><C-l>
 map <C-h> <C-w><C-h>
@@ -152,31 +205,28 @@ map <C-j> <C-w><C-j>
 map <C-k> <C-w><C-k>
 
 " ignore some stuff always
-set wildignore=**/node_modules?**,**/tmp/**,**/vendor/bundle/**,**/fixtures/vcr_cassettes/**/*,**/coverage/**,**/build/**,**/public/packs/**,**/public/packs-test/**,**/elm-stuff/**,**/dist**,_site/**
+set wildignore=**/node_modules?**,**/tmp/**,**/vendor/bundle/**,**/coverage/**,**/build/**,**/public/packs/**,**/public/packs-test/**,**/elm-stuff/**,**/dist**,_site/**
 
 " ALE Syntax checker setup
 " "
-let g:ale_javascript_prettier_use_global = 0
-let g:ale_ruby_rubocop_executable = 'bundle'
 
 let g:ale_fixers = {
-            \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-            \   'ruby': ['rubocop']
-            \}
+      \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+      \   'javascript': ['prettier'],
+      \   'purescript': [ 'purs-tidy' ],
+      \   'ruby': ['rubocop']
+      \}
 
 let g:ale_linters = {
-            \   '*': ['remove_trailing_lines', 'trim_whitespace'],
-            \   'ruby': ['rubocop'],
-            \   'scss': [],
-            \   'css': [],
-            \}
-
+      \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+      \   'javascript': ['prettier'],
+      \   'ruby': ['rubocop']
+      \}
+let g:ale_popup_menu_enabled=1
+" suggested to fix on save
 let g:ale_fix_on_save = 1
 let g:ale_set_loclist = 1
-let g:ale_set_quickfix = 0
-
-" let g:prettier#autoformat = 0
-" let g:prettier#autoformat_require_pragma = 0
+let g:ale_set_quickfix = 1
 
 set omnifunc=syntaxcomplete#Complete
 
@@ -185,8 +235,20 @@ set omnifunc=syntaxcomplete#Complete
 
 
 let g:rails_projections = {
+      \"domain/entities/**/*.rb": {
+      \   "command": "entity",
+      \   "test": [
+      \     "spec/domain/entities/{}_spec.rb"
+      \   ]
+      \ },
       \ "app/services/operations/*.rb": {
       \   "command": "operation",
+      \ },
+      \ "app/services/notifications/*.rb": {
+      \   "command": "notification",
+      \ },
+      \ "app/services/broadcasts/*.rb": {
+      \   "command": "broadcast",
       \ },
       \ "app/services/pages/*.rb": {
       \ "command": "page",
@@ -250,13 +312,13 @@ set smartcase " searches case insensitive with lower-case letters, but sensitive
 
 " automatically rebalance windows on vim resize
 autocmd VimResized * :wincmd =
-" set winwidth=104 " the 100 + some space for the line numbers and linting bar  ¯\_(ツ)_/¯
-"set winheight=30
+  " set winwidth=105 " the 120 + some space for the line numbers and linting bar  ¯\_(ツ)_/¯
+  "set winheight=30
 
 
 " make directory for current file
 function MkDir()
-    exe '!mkdir -p %:h'
+  exe '!mkdir -p %:h'
 endfunction
 
 """ TESTING (from https://github.com/garybernhardt/dotfiles/blob/master/.vimrc)
@@ -289,78 +351,83 @@ endfunction
 "    <leader>a, which runs everything.
 "
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <Leader>t :w<cr> \|call RunNearestSpec()<cr>
+map <Leader>l :w<cr> \|call RunLastSpec()<cr>
+" map <Leader>a :call Fifo('RAILS_ENV=test rake parallel:spec')<cr>
+map <Leader>a :call Fifo('bundle exec rspec')<cr>
+let g:rspec_command = ":call Fifo('rspec -f d --fail-fast {spec}')"
 function! MapCR()
-    nnoremap <cr> :call RunTestFile()<cr>
+    nnoremap <cr> :w<cr> \|:call RunCurrentSpecFile()<cr>
 endfunction
 call MapCR()
-nnoremap <leader>T :call RunNearestTest()<cr>
-nnoremap <leader>a :call RunTests('')<cr>
+" nnoremap <leader>T :call RunNearestTest()<cr>
+" nnoremap <leader>a :call RunTests('')<cr>
 
-function! RunTestFile(...)
-    if a:0
-        let command_suffix = a:1
-    else
-        let command_suffix = ""
-    endif
+" function! RunTestFile(...)
+"     if a:0
+"         let command_suffix = a:1
+"     else
+"         let command_suffix = ""
+"     endif
 
-    " Are we in a test file?
-    let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\|test_.*\.py\|_test.py\|Test.hs\|*.test.js\)$') != -1
+"     " Are we in a test file?
+"     let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\|_test.rb\|test_.*\.py\|_test.py\|Test.hs\|*.test.js\)$') != -1
 
-    " Run the tests for the previously-marked file (or the current file if
-    " it's a test).
-    if in_test_file
-        call SetTestFile(command_suffix)
-    elseif !exists("t:grb_test_file")
-        return
-    end
-    call RunTests(t:grb_test_file)
-endfunction
+"     " Run the tests for the previously-marked file (or the current file if
+"     " it's a test).
+"     if in_test_file
+"         call SetTestFile(command_suffix)
+"     elseif !exists("t:grb_test_file")
+"         return
+"     end
+"     call RunTests(t:grb_test_file)
+" endfunction
 
-function! RunNearestTest()
-    let spec_line_number = line('.')
-    call RunTestFile(":" . spec_line_number)
-endfunction
+" function! RunNearestTest()
+"     let spec_line_number = line('.')
+"     call RunTestFile(":" . spec_line_number)
+" endfunction
 
-function! SetTestFile(command_suffix)
-    " Set the spec file that tests will be run for.
-    let t:grb_test_file=@% . a:command_suffix
-endfunction
+" function! SetTestFile(command_suffix)
+"     " Set the spec file that tests will be run for.
+"     let t:grb_test_file=@% . a:command_suffix
+" endfunction
 
-function! RunTests(filename)
-    " Write the file and run tests for the given filename
-    if expand("%") != ""
-        :w
-    end
-    " The file is executable; assume we should run
-    if executable(a:filename)
-        exec ":call Fifo('./')" . a:filename
-        " Project-specific test script
-    elseif filereadable("bin/test")
-        exec ":call Fifo('bin/test " . a:filename . "')"
-        " rails test binstub
-    elseif filereadable("bin/rails test")
-        exec ":call Fifo('bundle exec rails test --format documentation --fail-fast " . a:filename . "')"
-    elseif filereadable("script/cucumber")
-        exec ":call Fifo('bundle exec script/cucumber " . a:filename . "')"
-        " Fall back to the .test-commands pipe if available, assuming someone
-        " is reading the other side and running the commands
-    elseif filewritable(".test-commands")
-        let cmd = 'bundle exec rails test --color --format documentation --require "~/lib/vim_rails test_formatter" --format VimFormatter --fail-fast --out tmp/quickfix'
-        exec ":!echo " . cmd . " " . a:filename . " > .test-commands"
+" function! RunTests(filename)
+"     " Write the file and run tests for the given filename
+"     if expand("%") != ""
+"         :w
+"     end
+"     " The file is executable; assume we should run
+"     if executable(a:filename)
+"         exec ":call Fifo('./')" . a:filename
+"         " Project-specific test script
+"     elseif filereadable("bin/test")
+"         exec ":call Fifo('bin/test " . a:filename . "')"
+"         " rails test binstub
+"     elseif filereadable("bin/rails test")
+"         exec ":call Fifo('bundle exec rails test --format documentation --fail-fast " . a:filename . "')"
+"     elseif filereadable("script/cucumber")
+"         exec ":call Fifo('bundle exec script/cucumber " . a:filename . "')"
+"         " Fall back to the .test-commands pipe if available, assuming someone
+"         " is reading the other side and running the commands
+"     elseif filewritable(".test-commands")
+"         let cmd = 'bundle exec rails test --color --format documentation --require "~/lib/vim_rails test_formatter" --format VimFormatter --fail-fast --out tmp/quickfix'
+"         exec ":!echo " . cmd . " " . a:filename . " > .test-commands"
 
-        " Write an empty string to block until the command completes
-        sleep 100m " milliseconds
-        :!echo > .test-commands
-        redraw!
-        " Fall back to a blocking test run with Bundler
-    elseif filereadable("bin/rails test")
-        exec ":call Fifo('bin/rails test --color --format documentation --fail-fast " . a:filename . "')"
-    elseif filereadable("Gemfile") && strlen(glob("spec/**/*.rb"))
-        exec ":call Fifo('bundle exec rails test --format documentation --color --fail-fast " . a:filename . "')"
-    elseif filereadable("Gemfile") && strlen(glob("test/**/*.rb"))
-        exec ":call Fifo('ruby " . a:filename . "')"
-    end
-endfunction
+"         " Write an empty string to block until the command completes
+"         sleep 120m " milliseconds
+"         :!echo > .test-commands
+"         redraw!
+"         " Fall back to a blocking test run with Bundler
+"     elseif filereadable("bin/rails test")
+"         exec ":call Fifo('bin/rails test --color --format documentation --fail-fast " . a:filename . "')"
+"     elseif filereadable("Gemfile") && strlen(glob("spec/**/*.rb"))
+"         exec ":call Fifo('bundle exec rails test --format documentation --color --fail-fast " . a:filename . "')"
+"     elseif filereadable("Gemfile") && strlen(glob("test/**/*.rb"))
+"         exec ":call Fifo('ruby " . a:filename . "')"
+"     end
+" endfunction
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Selecta Mappings
@@ -388,6 +455,20 @@ function! SelectaFile(path, glob, command)
     call SelectaCommand("find " . a:path . "/* -type f -and -not -path '*/node_modules/*' -and -not -path '*/_build/*' -and -not -path '*/build/*' -and -iname '" . a:glob . "' -and -not -iname '*.pyc' -and -not -ipath '*/tmp/*' -and -not -ipath '*/.meteor/*' -and -not -iname '*.png' -and -not -iname '*.jpg' -and -not -iname '*.eps' -and -not -iname '*.pdf' -and -not -iname '*.svg' -and -not -iname '*.ttf'", "", a:command)
 endfunction
 
+" Mappings to make Vim more friendly towards presenting slides.
+autocmd BufNewFile,BufRead *.vpm call SetVimPresentationMode()
+function SetVimPresentationMode()
+  nnoremap <buffer> <Right> :n<CR>
+  nnoremap <buffer> <Left> :N<CR>
+  set syntax=markdown
+  set wrap
+  set linebreak
+
+  if !exists('#goyo')
+    Goyo
+  endif
+endfunction
+
 augroup vimrcEx
     " Clear all autocmds in the group
     autocmd!
@@ -403,7 +484,15 @@ augroup vimrcEx
     autocmd FileType python set sw=4 sts=4 et
     autocmd FileType elm set ai sw=4 sts=4 et
     autocmd FileType elm set cursorline cursorcolumn
-    autocmd FileType elm set cc=80
+    autocmd FileType elm set cc=120
+
+    autocmd FileType gitcommit set cc=65
+    autocmd FileType gitcommit setlocal spell
+
+    autocmd FileType markdown set wrap
+    autocmd FileType markdown set linebreak
+    autocmd FileType markdown setlocal spell
+    autocmd FileType markdown set cc=0
 
     autocmd! BufRead,BufNewFile *.sass setfiletype sass
     " autocmd BufRead,BufNewFile *.erb set filetype=html
@@ -411,7 +500,8 @@ augroup vimrcEx
     " autocmd BufRead *.md  set ai formatoptions=tcroqn2 comments=n:&gt;
     " autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
 
-    autocmd FileType html,eruby let g:html_indent_tags .= '\|p\|li\|dt\|dd\|article\|section'
+    " autocmd FileType html,eruby let g:html_indent_tags .= '\|p\|li\|dt\|dd\|article\|section'
+    let g:html_indent_inctags = "html,body,head,tbody"
 
 
     " " Don't syntax highlight markdown because it's often wrong
@@ -434,7 +524,7 @@ augroup END
 map <leader>gr :topleft :split config/routes.rb<cr>
 function! ShowRoutes()
   " Requires 'scratch' plugin
-  :topleft 100 :split __Routes__
+  :topleft 120 :split __Routes__
   " Make sure Vim doesn't write __Routes__ as a file
   :set buftype=nofile
   " Delete everything
@@ -463,6 +553,10 @@ set expandtab
 
 set number
 
+" Map jj to Esc in insert mode
+imap jj <Esc>
+set timeoutlen=1200
+
 " Prevent Vim from clobbering the scrollback buffer. See
 " http://www.shallowsky.com/linux/noaltscreen.html
 set t_ti= t_te=
@@ -488,7 +582,20 @@ nnoremap gdl :diffget //3<CR>
 " " Turn off folds in Markdown files
 " au FileType markdown setlocal nofoldenable
 "
+"
+let g:alternateExtensions = {}
+let g:alternateExtensions['rb'] = '_spec.rb'   " Ruby files to spec files
+let g:alternateExtensions['_spec.rb'] = '.rb'  " Spec files to Ruby files
 
+" Define file patterns (example for your project structure)
+let g:alternate_file_patterns = [
+      \ ['\v(spec/.*)/(.*)_spec\.rb', '\1/\2.rb'],
+      \ ['\v(.*)\.rb', 'spec/\1_spec.rb']
+      \ ]
+
+let g:copilot_filetypes = {
+      \ 'markdown': v:false,
+      \ }
 set nocompatible
 if has("autocmd")
     filetype indent plugin on
@@ -503,18 +610,14 @@ endif
 :set showtabline=0
 :set nowrap
 
+
 " COLORS
 
 :set t_Co=256
 :set cursorline
 :set cursorcolumn
-:set colorcolumn=120
-
-colorscheme lucius
-let iterm_profile = $ITERM_PROFILE
-
-if iterm_profile == "Dark"
-    set background=dark
-else
-    set background=light
-endif
+:set colorcolumn=100
+colorscheme jellybeans
+" colorscheme lucius
+" :set background=light
+let g:jellybeans_use_term_italics = 1
