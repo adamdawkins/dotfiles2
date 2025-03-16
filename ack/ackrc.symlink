@@ -3,6 +3,7 @@
 --ignore-dir=tmp
 --ignore-dir=vendor
 --ignore-dir=public/assets
+--ignore-dir=coverage
 
 # Ignore file types
 --ignore-file=is:tags
