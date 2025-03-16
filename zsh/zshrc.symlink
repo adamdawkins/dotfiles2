@@ -92,5 +92,8 @@ export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
 #     }
 #     sith
 # fi
-export EDITOR=vim
-export GIT_EDITOR=vim
+export EDITOR=nvim
+export GIT_EDITOR=nvim
+
+# Created by `pipx` on 2025-03-07 21:35:59
+export PATH="$PATH:/Users/adamdawkins/.local/bin"

@@ -353,7 +353,7 @@ endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 map <Leader>t :w<cr> \|call RunNearestSpec()<cr>
 map <Leader>l :w<cr> \|call RunLastSpec()<cr>
-" map <Leader>a :call Fifo('RAILS_ENV=test rake parallel:spec')<cr>
+" map <Leader>a :call Fifo('RAILS_ENV=test rake parallel:spe')<cr>
 map <Leader>a :call Fifo('bundle exec rspec')<cr>
 let g:rspec_command = ":call Fifo('rspec -f d --fail-fast {spec}')"
 function! MapCR()

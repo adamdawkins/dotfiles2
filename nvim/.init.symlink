@@ -1,32 +1,43 @@
 require('packer').startup(function(use)
-  use 'easymotion/vim-easymotion'        -- Easy motion
-  use 'hrsh7th/cmp-nvim-lsp'             -- LSP source for nvim-cmp
-  use 'hrsh7th/nvim-cmp'                 -- Autocompletion plugin
-  use 'jbyuki/venn.nvim'                 -- Draw ASCII diagrams in Neovim
-  use 'kyazdani42/nvim-tree.lua'         -- File explorer
-  use 'lewis6991/gitsigns.nvim'          -- Git signs in the gutter
-  use 'lukas-reineke/indent-blankline.nvim' -- Display indents
-  use 'neovim/nvim-lspconfig'            -- Built-in LSP support
-  use 'nvim-lua/plenary.nvim'            -- Required by Telescope
-  use 'nvim-lualine/lualine.nvim'        -- Statusline
-  use 'nvim-telescope/telescope.nvim'    -- Fuzzy finder replacement for CtrlP
-  use 'nvim-treesitter/nvim-treesitter'  -- Modern syntax highlighting
-  use 'nvimtools/hydra.nvim'             -- A better way to manage keymaps
-  use 'romainl/vim-cool' 
-  use 'sotte/presenting.nvim'            -- Presentation mode
-  use 'tpope/vim-abolish'                -- Intelligent search and replace
-  use 'tpope/vim-commentary'             -- Comments
-  use 'tpope/vim-fugitive'               -- Git integration
-  use 'tpope/vim-projectionist'          -- Project-specific settings
-  use 'tpope/vim-sensible'               -- Good Vim defaults
-  use 'tpope/vim-surround'               -- Essential text objects
-  use 'tpope/vim-unimpaired'             -- Pairs of handy bracket mappings
-  use 'wbthomason/packer.nvim'           -- Packer manages itself
+  use 'jparise/vim-graphql'
+  use 'mattn/emmet-vim'
+  use 'easymotion/vim-easymotion'               -- easy motion
+  use 'elixir-editors/vim-elixir'               -- elixir support
+  use 'jbyuki/venn.nvim'                        -- draw ascii diagrams in neovim
+  use 'lewis6991/gitsigns.nvim'                 -- git signs in the gutter
+  use 'lukas-reineke/indent-blankline.nvim'     -- display indents
+  use 'neovim/nvim-lspconfig'                   -- built-in lsp support
+  use 'nvim-lua/plenary.nvim'                   -- required by telescope
+  use 'nvim-lualine/lualine.nvim'               -- statusline
+  use 'nvim-telescope/telescope.nvim'           -- fuzzy finder replacement for ctrlp
+  use 'nvim-treesitter/nvim-treesitter'         -- modern syntax highlighting
+  use 'chazmcgarvey/vim-mermaid'
 
+  use 'nvimtools/hydra.nvim'                    -- a better way to manage keymaps
+  use 'romainl/vim-cool'                        -- A very simple plugin that makes hlsearch more useful.
+  use 'tpope/vim-abolish'                       -- intelligent search and replace
+  use 'tpope/vim-commentary'                    -- comments
+  use 'tpope/vim-fugitive'                      -- git integration
+  use 'tpope/vim-rails'                         -- rails integration
+  use 'tpope/vim-sensible'                      -- good vim defaults
+  use 'tpope/vim-sleuth'
+  use 'tpope/vim-surround'                      -- essential text objects
+  use 'tpope/vim-unimpaired'                    -- pairs of handy bracket mappings
+  use 'wbthomason/packer.nvim'                  -- packer manages itself
+  use {
+    "ThePrimeagen/refactoring.nvim",
+    requires = {
+      {"nvim-lua/plenary.nvim"},
+      {"nvim-treesitter/nvim-treesitter"}
+    }
+  }
+
+  use {'neoclide/coc.nvim', branch = 'release'} -- coc.nvim
 --  Themes
-use 'Mofiqul/dracula.nvim'
+  -- use 'savq/melange'                              -- Melange theme
+  -- use 'Mofiqul/dracula.nvim'
   use 'folke/tokyonight.nvim'                  -- Tokyo night theme.
-  use { "catppuccin/nvim", as = "catppuccin" } --  Catppuccin theme
+  -- use { "catppuccin/nvim", as = "catppuccin" } --  Catppuccin theme
 end)
 
 
@@ -48,37 +59,43 @@ vim.api.nvim_set_keymap('n', '<C-h>', '<C-w><C-h>', { noremap = true, silent = t
 vim.api.nvim_set_keymap('n', '<C-j>', '<C-w><C-j>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-k>', '<C-w><C-k>', { noremap = true, silent = true })
 
+-- vim.api.nvim_set_keymap("n", "<leader>x", [[<Cmd>lua pcall(vim.api.nvim_win_close, 0, true)<CR>]], { noremap = true, silent = true })
+
+-- # Copy to clipboard
+vim.api.nvim_set_keymap('n', '<leader>y', ':%y+<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<leader>y', '"+y', { noremap = true, silent = true })
+
 -- # TELESCOPE
 require('telescope').setup({
   defaults = {
-    file_ignore_patterns = { "app/assets/.*", "spec/fixtures/vcr_cassettes/.*" },
+    file_ignore_patterns = { "app/assets/.*", "spec/fixtures/vcr_cassettes/.*", "elm-stuff/**/*" },
   },
 })
 -- Telescope recommended aliases
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
-vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
 vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
 
 -- Plus my old b and p for muscle memory
 vim.keymap.set('n', '<leader>p', builtin.find_files, { desc = 'Telescope find files' })
 vim.keymap.set('n', '<leader>b', builtin.buffers, { desc = 'Telescope buffers' })
+vim.keymap.set('n', '<leader>g', builtin.git_status, { desc = 'Telescope Git files' })
 
 -- # KEY MAPPINGS
 -- Open ~/.config/nvim/init.lua
 vim.keymap.set('n', '<leader>vi', ':e ~/.config/nvim/init.lua<cr>')
+vim.keymap.set('n', '<leader>.', ':A<cr>')
 
 -- # TREESITTER
 require('nvim-treesitter.configs').setup {
-    ensure_installed = { "ruby" },  -- Add other languages as needed
+    ensure_installed = { "ruby", "eex", "elixir", "erlang", "heex" },  -- Add other languages as needed
     highlight = {
         enable = true,              -- Enable Treesitter highlighting
         additional_vim_regex_highlighting = false,
     },
 }
 
--- # GIT 
+-- # GIT
 -- ## GIT SIGNS
 require('gitsigns').setup {
     current_line_blame = true,  -- Enable inline blame
@@ -90,15 +107,35 @@ require('gitsigns').setup {
     current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
 }
 
+-- Rename file
+-- Define the rename file function in Lua
+local function rename_file()
+  -- Get the current filename
+  local old_name = vim.fn.expand('%')
+  -- Prompt the user for a new name, pre-filling with the current filename
+  local new_name = vim.fn.input("New file name: ", old_name, "file")
+
+  -- Check if the new name is not empty and different from the old name
+  if new_name ~= "" and new_name ~= old_name then
+    -- Save the file with the new name
+    vim.cmd('saveas ' .. vim.fn.fnameescape(new_name))
+    -- Delete the old file
+    vim.fn.delete(old_name)
+    -- Close the buffer associated with the old file
+    vim.cmd('bdelete ' .. old_name)
+  end
+end
+
+vim.keymap.set("n", "<leader>nm", rename_file, { noremap = true, silent = true })
+
 -- # STATUS LINE
 require('lualine').setup {
   options = {
-    theme = 'dracula',
+    theme = 'tokyonight',
     section_separators = {'', ''},
     component_separators = {'', ''},
-  },
+  }
 }
-vim.api.nvim_set_keymap('n', '<leader>gb', ':Gitsigns toggle_current_line_blame<CR>', { noremap = true, silent = true })
 
 -- Define a default database
 vim.g.psql_db = "victory_development"
@@ -115,6 +152,8 @@ function Sql()
   vim.cmd("!" .. cmd)
 end
 
+vim.api.nvim_create_user_command('Gblame', ':Git blame -w -C -C -C<cr>', {})
+
 -- Set up a command to run this function
 vim.api.nvim_create_user_command('Sql', Sql, {})
 
@@ -122,8 +161,19 @@ vim.api.nvim_create_user_command('Sql', Sql, {})
 vim.api.nvim_set_keymap('n', '<leader>s', ':Sql<CR>', { noremap = true, silent = true })
 
 
--- Presenting mode
-require('presenting').setup({})
+-- # RENAME FILE
+function RenameFile()
+  local old_name = vim.fn.expand('%')
+  local new_name = vim.fn.input('New file name: ', old_name, 'file')
+
+  if new_name ~= '' and new_name ~= old_name then
+    vim.cmd('saveas ' .. new_name)
+    vim.cmd('silent !rm ' .. old_name)
+    vim.cmd('redraw!')
+  end
+end
+
+vim.api.nvim_set_keymap('n', '<leader>rn', ':lua RenameFile()<CR>', { noremap = true, silent = true })
 
 
 -- Venn
@@ -154,15 +204,141 @@ end
 vim.api.nvim_set_keymap('n', '<leader>v', ":lua Toggle_venn()<CR>", { noremap = true})
 
 
--- # VISUALS
+-- PASTE HERE
+vim.api.nvim_set_keymap('n', '<leader>hp', ':%d | put+<CR>', { noremap = true, silent = true })
 
+-- RAILS
+vim.api.nvim_set_keymap('n', '<leader>ru', ':e config/routes.rb<CR>', {noremap = true})
+
+-- Define Fifo function in Vimscript to ensure it works exactly like the original
 vim.cmd([[
   function! Fifo(cmd)
     silent! execute '!echo "clear; cd ' . getcwd() . ' && ' . a:cmd . '" > /tmp/cmds'
     redraw!
   endfunction
 ]])
+
+-- Global variables to store test file and other test context
+vim.g.asd_test_file = ""
+
+-- Function to run test file
+function _G.RunTestFile(command_suffix)
+  command_suffix = command_suffix or ""
+  
+  -- Check if we're in a test file
+  local current_file = vim.fn.expand("%")
+  local in_test_file = vim.fn.match(current_file, [[\(_spec\.rb\|_test\.rb\)$]]) ~= -1
+  
+  -- Run the tests for the previously-marked file or the current file if it's a test
+  if in_test_file then
+    SetTestFile(command_suffix)
+  elseif vim.g.asd_test_file == "" then
+    return
+  end
+  
+  RunTests(vim.g.asd_test_file)
+end
+
+-- Function to run nearest test (with line number)
+function _G.RunNearestTest()
+  local spec_line_number = vim.fn.line('.')
+  RunTestFile(":" .. spec_line_number)
+end
+
+-- Function to set the test file
+function _G.SetTestFile(command_suffix)
+  -- Set the spec file that tests will be run for
+  vim.g.asd_test_file = vim.fn.expand("%") .. command_suffix
+end
+
+-- Function to run tests with the given filename
+function _G.RunTests(filename)
+  -- Write the file and run tests for the given filename
+  if vim.fn.expand("%") ~= "" then
+    vim.cmd("w")
+  end
+  
+  -- Check for various test runners and execute the appropriate one
+  if vim.fn.executable(filename) == 1 then
+    -- The file is executable; assume we should run it directly
+    vim.cmd("call Fifo('./" .. filename .. "')")
+  elseif vim.fn.filereadable("bin/test") == 1 then
+    -- Project-specific test script
+    vim.cmd("call Fifo('bin/test " .. filename .. "')")
+  elseif vim.fn.filereadable("bin/rails") == 1 then
+    -- Rails test binstub
+    vim.cmd("call Fifo('bundle exec rails test " .. filename .. "')")
+  elseif vim.fn.filereadable("Gemfile") == 1 and vim.fn.glob("spec/**/*.rb") ~= "" then
+    -- RSpec with bundler
+    vim.cmd("call Fifo('bundle exec rspec " .. filename .. "')")
+  elseif vim.fn.filereadable("Gemfile") == 1 and vim.fn.glob("test/**/*.rb") ~= "" then
+    -- Ruby tests with minitest
+    vim.cmd("call Fifo('bundle exec ruby " .. filename .. "')")
+  end
+end
+
+
+-- Set up keymappings for test running
+vim.api.nvim_set_keymap('n', '<CR>', ':lua RunTestFile()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>T', ':lua RunNearestTest()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>a', ':lua RunTests("")<CR>', { noremap = true, silent = true })
+
+
+-- Special handling for command windows and quickfix windows
+vim.api.nvim_create_autocmd("CmdwinEnter", {
+  pattern = "*",
+  callback = function()
+    vim.api.nvim_buf_del_keymap(0, 'n', '<CR>')
+  end
+})
+
+vim.api.nvim_create_autocmd("BufReadPost", {
+  pattern = "quickfix",
+  callback = function()
+    vim.api.nvim_buf_set_keymap(0, 'n', '<CR>', '<CR>', { noremap = true, silent = true })
+  end
+})
+
+vim.api.nvim_create_autocmd("CmdwinLeave", {
+  pattern = "*",
+  callback = function()
+    vim.api.nvim_set_keymap('n', '<CR>', ':lua RunTestFile()<CR>', { noremap = true, silent = true })
+  end
+})
+
+
+
+-- navigating code diagnostics
+-- Navigate diagnostics with Coc
+vim.api.nvim_set_keymap('n', '[k', '<Plug>(coc-diagnostic-prev)', {})
+vim.api.nvim_set_keymap('n', ']j', '<Plug>(coc-diagnostic-next)', {})
+
+-- Show diagnostics in a floating window
+vim.api.nvim_set_keymap('n', '<leader>e', ":call CocAction('diagnosticInfo')<CR>", { noremap = true, silent = true })
+
+-- Show diagnostics in location list
+vim.api.nvim_set_keymap('n', '<leader>q', ':CocCommand diagnostic.showLocationList<CR>', { noremap = true, silent = true })
+
+-- Refactoring
+-- prompt for a refactor to apply when the remap is triggered
+require("telescope").load_extension("refactoring")
+
+vim.keymap.set(
+	{"n", "x"},
+	"<leader>rr",
+	function() require('telescope').extensions.refactoring.refactors() end
+)
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "sql",
+  callback = function()
+    vim.bo.commentstring = "-- %s"
+  end,
+})
+
 -- Set the colorscheme
-vim.cmd [[colorscheme tokyonight]]
--- Set a color column at column 80
+vim.opt.termguicolors = true
+vim.cmd.colorscheme 'tokyonight-storm'
+vim.cmd.background = 'dark'
+-- Set a color column
 vim.o.colorcolumn = "120"
